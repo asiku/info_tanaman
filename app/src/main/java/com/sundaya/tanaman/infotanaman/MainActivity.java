@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
                 }catch(InterruptedException e){
                     e.printStackTrace();
                 }finally{
-                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                    Intent intent = new Intent(MainActivity.this,menu_utama.class);
                     startActivity(intent);
                     finish();
                 }

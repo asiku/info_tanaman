@@ -2,20 +2,11 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_menu_utama"
+    android:id="@+id/content_list_tanaman"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   android:paddingTop="10dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.sundaya.tanaman.infotanaman.menu_utama"
-    tools:showIn="@layout/app_bar_menu_utama">
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/Rvfoto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:background="@color/cardview_light_background"/>
+    tools:context="com.sundaya.tanaman.infotanaman.List_tanaman"
+    tools:showIn="@layout/activity_list_tanaman">
 
 </android.support.constraint.ConstraintLayout>

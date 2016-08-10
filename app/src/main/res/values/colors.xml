@@ -3,4 +3,28 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <!-- colors -->
+    <color name="putih">#ffffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="coklat">#2d2522</color>
+    <color name="orange">#e0a63a</color>
+    <color name="white">#ffffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="red">#ffff0000</color>
+    <color name="green">#ff00ff00</color>
+    <color name="blue1">#ff0000ff</color>
+    <color name="biru">#00bff3</color>
+    <color name="tosca">#2b776b</color>
+    <color name="tosca2">#42a096</color>
+    <color name="blue2">#ff4082d7</color>
+    <color name="grey1">#ffaaaaaa</color>
+    <color name="grey2">#ffdddddd</color>
+    <color name="grey3">#ff666666</color>
+    <color name="grey4">#ff222222</color>
+    <color name="grey5">#ff777777</color>
+    <color name="grey6">#ff444444</color>
+    <color name="greylist">#E0E0E0</color>
+    <color name="background">#dddddd</color>
+    <color name="topbar">#888888</color>
+    <color name="buttonbar">#88888888</color>
 </resources>
