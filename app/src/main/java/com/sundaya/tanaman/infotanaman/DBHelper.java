@@ -13,7 +13,7 @@ import static com.sundaya.tanaman.infotanaman.Tb_tanaman.TABLE;
 public class DBHelper extends SQLiteOpenHelper {
 
     //edit ke-1
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     // Database Name
     private static final String DATABASE_NAME = "tanaman.db";
@@ -39,6 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String CREATE_TABLE_FOTO = "CREATE TABLE " + Tb_Foto.TABLE + "("
                 + Tb_Foto.KEY_ID_FOTO + " integer primary key autoincrement,"
+                + Tb_Foto.KEY_ID_TANAMAN + " INTEGER NOT NULL, "
                 + Tb_Foto.KEY_LOKASI + " TEXT NOT NULL)";
 
         db.execSQL(CREATE_TABLE_FOTO);

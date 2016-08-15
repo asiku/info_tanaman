@@ -33,9 +33,9 @@ public class Tb_tanaman_Crud {
 
 
         // Inserting Row
-        long id_customer = db.insert(Tb_tanaman.TABLE, null, values);
+        long id_tanaman = db.insert(Tb_tanaman.TABLE, null, values);
         db.close(); // Closing database connection
-        return (int) id_customer;
+        return (int) id_tanaman;
     }
 
     public void Delete(int id_tanaman){
