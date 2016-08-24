@@ -10,6 +10,7 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -35,7 +36,11 @@
             android:name=".List_tanaman"
             android:label="@string/title_activity_list_tanaman"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Fototanaman"></activity>
+        <activity android:name=".Fototanaman" />
+        <activity
+            android:name=".Edit_list_Activity"
+            android:label="@string/title_activity_edit_list_"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

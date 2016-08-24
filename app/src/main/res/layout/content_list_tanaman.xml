@@ -9,4 +9,12 @@
     tools:context="com.sundaya.tanaman.infotanaman.List_tanaman"
     tools:showIn="@layout/activity_list_tanaman">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/Rvlistfoto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:background="@color/cardview_light_background"/>
+
+
 </android.support.constraint.ConstraintLayout>

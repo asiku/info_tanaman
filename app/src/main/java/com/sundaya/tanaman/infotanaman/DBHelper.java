@@ -10,10 +10,13 @@ import static com.sundaya.tanaman.infotanaman.Tb_tanaman.TABLE;
  * Created by Userpc on 10/08/2016.
  */
 
+
+
+
 public class DBHelper extends SQLiteOpenHelper {
 
     //edit ke-1
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 6;
 
     // Database Name
     private static final String DATABASE_NAME = "tanaman.db";

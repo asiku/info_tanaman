@@ -4,11 +4,13 @@ import android.content.Intent;
 
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -19,7 +21,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -27,34 +32,68 @@ public class menu_utama extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-
     private boolean toggle;
     private Menu menu;
-
+    public final String APP_TAG = "FotoTanaman";
 
     //Recyclerview Variabel
-    private List<Foto_data> persons;
+    private List<Foto_data> tanaman;
     private RecyclerView rv;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
 
+    //db con
+    Tb_tanaman_Crud crud_tanaman;
+    Tb_Foto_Crud crud_foto;
+
+    Tb_tanaman tb_tanaman=new Tb_tanaman();
+    Tb_Foto tb_foto=new Tb_Foto();
+
+
     private void initializeData(){
-        persons = new ArrayList<>();
-        persons.add(new Foto_data("Emma Wilson", "23 years old",R.drawable.plant));
-        persons.add(new Foto_data("Lavery Maiss", "25 years old",R.drawable.user));
-        persons.add(new Foto_data("Lillie Watts", "35 years old",R.drawable.tanamanlogo));
-        persons.add(new Foto_data("Emma Wilson", "23 years old",R.drawable.plant));
-        persons.add(new Foto_data("Lavery Maiss", "25 years old",R.drawable.user));
-        persons.add(new Foto_data("Lillie Watts", "35 years old",R.drawable.tanamanlogo));
-        persons.add(new Foto_data("Emma Wilson", "23 years old",R.drawable.plant));
-        persons.add(new Foto_data("Lavery Maiss", "25 years old",R.drawable.user));
-        persons.add(new Foto_data("Lillie Watts", "35 years old",R.drawable.tanamanlogo));
-        persons.add(new Foto_data("Emma Wilson", "23 years old",R.drawable.plant));
-        persons.add(new Foto_data("Lavery Maiss", "25 years old",R.drawable.user));
-        persons.add(new Foto_data("Lillie Watts", "35 years old",R.drawable.tanamanlogo));
+
+        File mediaStorageDir = new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                APP_TAG);
+
+        crud_tanaman=new Tb_tanaman_Crud(this);
+
+        crud_foto=new Tb_Foto_Crud(this);
+
+
+        ArrayList<HashMap<String, String>> getTanaman = crud_tanaman.getAllTanaman();
+
+        tanaman = new ArrayList<>();
+
+        Log.d("Ukuran : ",String.valueOf(getTanaman.size()));
+
+        for(int i=0;i<getTanaman.size();i++){
+
+
+            tb_foto=crud_foto.getFotoById(Integer.valueOf(getTanaman.get(i).get(tb_foto.KEY_ID_TANAMAN)));
+
+            Log.d("nama lokasi  ",""+getTanaman.get(i).get(tb_foto.KEY_LOKASI));
+
+            tanaman.add(new Foto_data(getTanaman.get(i).get(tb_tanaman.KEY_NAMA_LOKAL),getTanaman.get(i).get(tb_tanaman.KEY_NAMA_LATIN),getTanaman.get(i).get(tb_tanaman.KEY_KHASIAT)
+                    ,getTanaman.get(i).get(tb_tanaman.KEY_SENYAWA),R.drawable.plant,tb_foto.nama_lokasi));
+        }
+
+
+
+//        persons.add(new Foto_data("Lavery Maiss", "25 years old",R.drawable.user));
+//        persons.add(new Foto_data("Lillie Watts", "35 years old",R.drawable.tanamanlogo));
+//        persons.add(new Foto_data("Emma Wilson", "23 years old",R.drawable.plant));
+//        persons.add(new Foto_data("Lavery Maiss", "25 years old",R.drawable.user));
+//        persons.add(new Foto_data("Lillie Watts", "35 years old",R.drawable.tanamanlogo));
+//        persons.add(new Foto_data("Emma Wilson", "23 years old",R.drawable.plant));
+//        persons.add(new Foto_data("Lavery Maiss", "25 years old",R.drawable.user));
+//        persons.add(new Foto_data("Lillie Watts", "35 years old",R.drawable.tanamanlogo));
+//        persons.add(new Foto_data("Emma Wilson", "23 years old",R.drawable.plant));
+//        persons.add(new Foto_data("Lavery Maiss", "25 years old",R.drawable.user));
+//        persons.add(new Foto_data("Lillie Watts", "35 years old",R.drawable.tanamanlogo));
     }
 
     private void initializeAdapter(){
-        Foto_Adapter adapter = new Foto_Adapter(persons);
+        Foto_Adapter adapter = new Foto_Adapter(tanaman,this);
         rv.setAdapter(adapter);
     }
 
@@ -71,8 +110,11 @@ public class menu_utama extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Ambil Foto", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                Intent intent = new Intent(menu_utama.this,List_tanaman.class);
+                startActivity(intent);
             }
         });
 
@@ -84,7 +126,6 @@ public class menu_utama extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
 
 

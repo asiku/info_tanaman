@@ -13,11 +13,13 @@ import java.util.HashMap;
  */
 
 public class Tb_Foto_Crud {
+
     private DBHelper dbHelper;
 
     public Tb_Foto_Crud(Context context){
         dbHelper =new DBHelper(context);
     }
+
     public int Insert(Tb_Foto foto_item){
         //Open connection to write data
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -41,7 +43,39 @@ public class Tb_Foto_Crud {
 
     }
 
-    public ArrayList<HashMap<String, String>> getFotoById(int Id){
+
+    public Tb_Foto getFotoById(int Id){
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery =  "SELECT  " +
+                Tb_Foto.KEY_ID_TANAMAN + "," +
+                Tb_Foto.KEY_ID_FOTO + "," +
+                Tb_Foto.KEY_LOKASI +
+                " FROM " + Tb_Foto.TABLE
+                + " WHERE " +
+                Tb_Foto.KEY_ID_TANAMAN + "=?";// It's a good practice to use parameter ?, instead of concatenate string
+
+        int iCount =0;
+        Tb_Foto pos = new Tb_Foto();
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[] { String.valueOf(Id) } );
+
+        if (cursor.moveToFirst()) {
+            //   do {
+            pos.id_foto =cursor.getInt(cursor.getColumnIndex(Tb_Foto.KEY_ID_FOTO));
+            pos.id_tanaman =cursor.getInt(cursor.getColumnIndex(Tb_Foto.KEY_ID_TANAMAN));
+            pos.nama_lokasi  =cursor.getString(cursor.getColumnIndex(Tb_Foto.KEY_LOKASI));
+
+            //  } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return pos;
+    }
+
+
+
+    public ArrayList<HashMap<String, String>> getAllFotoById(int Id){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selectQuery = "SELECT  " +
                 Tb_Foto.KEY_ID_TANAMAN + "," +

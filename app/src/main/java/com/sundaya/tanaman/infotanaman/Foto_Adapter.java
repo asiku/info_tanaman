@@ -1,5 +1,7 @@
 package com.sundaya.tanaman.infotanaman;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -17,26 +21,30 @@ import java.util.List;
 public class Foto_Adapter extends RecyclerView.Adapter<Foto_Adapter.Foto>{
 
 
+    Context mContext;
+
 
     public  class Foto extends RecyclerView.ViewHolder{
         CardView cv;
-        TextView personName;
-        TextView personAge;
-        ImageView personPhoto;
+        TextView namalokal;
+        TextView namalatin;
+        ImageView fototanaman;
 
         Foto(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
-            personName = (TextView)itemView.findViewById(R.id.person_name);
-            personAge = (TextView)itemView.findViewById(R.id.person_age);
-            personPhoto = (ImageView)itemView.findViewById(R.id.person_photo);
+            namalokal = (TextView)itemView.findViewById(R.id.txt_row_nama_lokal);
+            namalatin = (TextView)itemView.findViewById(R.id.txt_row_nama_latin);
+            fototanaman = (ImageView)itemView.findViewById(R.id.img_row_photo_tanaman);
         }
     }
 
-    List<Foto_data> persons;
+    List<Foto_data> tanaman;
 
-    Foto_Adapter(List<Foto_data> persons){
-        this.persons = persons;
+    Foto_Adapter(List<Foto_data> tanaman, Context context){
+
+        this.mContext=context;
+        this.tanaman = tanaman;
     }
 
 
@@ -49,15 +57,20 @@ public class Foto_Adapter extends RecyclerView.Adapter<Foto_Adapter.Foto>{
     }
 
     @Override
-    public void onBindViewHolder(Foto personViewHolder, int i) {
-        personViewHolder.personName.setText(persons.get(i).name);
-        personViewHolder.personAge.setText(persons.get(i).age);
-        personViewHolder.personPhoto.setImageResource(persons.get(i).photoId);
+    public void onBindViewHolder(Foto tanamanViewHolder, int i) {
+        tanamanViewHolder.namalokal.setText(tanaman.get(i).nama_lokal);
+        tanamanViewHolder.namalatin.setText(tanaman.get(i).nama_latin);
+
+        Picasso.with(mContext).load("file:///"+tanaman.get(i).path).into(tanamanViewHolder.fototanaman);
+
+//        tanamanViewHolder.cv.setCardBackgroundColor(tanaman.(i).isSelected() ? Color.LTGRAY : Color.WHITE);
+
+       // tanamanViewHolder.fototanaman.setImageResource(tanaman.get(i).fototanaman);
     }
 
     @Override
     public int getItemCount() {
-        return persons.size();
+        return tanaman.size();
     }
 
 }

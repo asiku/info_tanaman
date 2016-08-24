@@ -86,4 +86,46 @@ public class Tb_tanaman_Crud {
 
     }
 
+    public ArrayList<HashMap<String, String>> getAllTanaman(){
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT  " +
+                Tb_tanaman.KEY_ID_TANAMAN + "," +
+                Tb_tanaman.KEY_NAMA_LOKAL + "," +
+                Tb_tanaman.KEY_NAMA_LATIN + "," +
+                Tb_tanaman.KEY_KHASIAT + "," +
+                Tb_tanaman.KEY_SENYAWA +
+                " FROM " + Tb_tanaman.TABLE;
+
+
+        ArrayList<HashMap<String, String>> posList = new ArrayList<HashMap<String, String>>();
+
+        Cursor cursor = db.rawQuery(selectQuery, null );
+
+
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> pos = new HashMap<String, String>();
+                pos.put(Tb_tanaman.KEY_ID_TANAMAN, cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_ID_TANAMAN)));
+                pos.put(Tb_tanaman.KEY_NAMA_LOKAL, cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_NAMA_LOKAL)));
+                pos.put(Tb_tanaman.KEY_NAMA_LATIN, cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_NAMA_LATIN)));
+                pos.put(Tb_tanaman.KEY_KHASIAT, cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_KHASIAT)));
+                pos.put(Tb_tanaman.KEY_SENYAWA, cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_SENYAWA)));
+
+                posList.add(pos);
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return posList;
+
+
+    }
+
+
+
+
+
 }

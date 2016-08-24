@@ -23,4 +23,6 @@
     <string name="title_save">Save</string>
     <string name="title_activity_list_tanaman">List Tanaman</string>
     <string name="title_activity_foto_tanaman">Foto tanaman</string>
+    <string name="title_activity_edit_list_">Edit Data Tanaman</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
