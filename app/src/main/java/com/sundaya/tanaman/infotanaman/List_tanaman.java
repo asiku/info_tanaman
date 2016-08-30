@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -24,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import android.database.Cursor;
 import java.util.List;
 
 public class List_tanaman extends AppCompatActivity {
@@ -33,6 +32,10 @@ public class List_tanaman extends AppCompatActivity {
 
     private String path;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private static int RESULT_GALERY_IMAGE = 2;
+
+
     public final String APP_TAG = "FotoTanaman";
     public String photoFileName = "tmp";
 
@@ -45,7 +48,6 @@ public class List_tanaman extends AppCompatActivity {
 
     Bundle b = new Bundle();
     Bundle c;
-
 
 
     ArrayList<String> lst = new ArrayList<String>();
@@ -63,6 +65,9 @@ public class List_tanaman extends AppCompatActivity {
         setContentView(R.layout.activity_list_tanaman);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         Intent intent = getIntent();
         c = intent.getExtras();
@@ -95,7 +100,6 @@ public class List_tanaman extends AppCompatActivity {
         if (c != null) {
 
 
-
             lstbundle = c.getStringArrayList("listfoto");
 
             for (int i = 0; i < lstbundle.size(); i++) {
@@ -103,9 +107,8 @@ public class List_tanaman extends AppCompatActivity {
                 list_data.add(new List_data(lstbundle.get(i)));
 
                 //posisi edit 23
-              //  lst.add(lstbundle.get(i));
+                //  lst.add(lstbundle.get(i));
             }
-
 
 
             initializeAdapter();
@@ -113,11 +116,8 @@ public class List_tanaman extends AppCompatActivity {
         } else {
 
 
-
             dispatchTakePictureIntent();
         }
-
-
 
 
     }
@@ -162,23 +162,20 @@ public class List_tanaman extends AppCompatActivity {
                     }
 
 
-
-                        //b.putStringArrayList("listfoto", lst);
+                    //b.putStringArrayList("listfoto", lst);
 
                     //ubah disini
-                        for (int i = 0; i < adapter.list_foto.size(); i++) {
-                            lst.add(i, adapter.list_foto.get(i).path);
-                        }
-                        b.putStringArrayList("listfoto", lst);
+                    for (int i = 0; i < adapter.list_foto.size(); i++) {
+                        lst.add(i, adapter.list_foto.get(i).path);
+                    }
+                    b.putStringArrayList("listfoto", lst);
                     //
 
                     Log.d("kampret3", " " + lst.size());
 
                     Log.d("kampret4", " " + adapter.list_foto.size());
 
-                }
-                else
-                {
+                } else {
                     for (int i = 0; i < adapter.list_foto.size(); i++) {
                         lst.add(i, adapter.list_foto.get(i).path);
                     }
@@ -194,6 +191,20 @@ public class List_tanaman extends AppCompatActivity {
                 return true;
             case R.id.action_select_all:
 
+                Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(i, RESULT_GALERY_IMAGE);
+
+                return true;
+
+            case android.R.id.home:
+                if(b!=null) {
+                    Toast.makeText(getApplicationContext(), "Maaf tidak Bisa Exit karena ada Foto yang Sudah di Proses, Anda Harus Tap Icon Checklist untuk keluar!", Toast.LENGTH_LONG).show();
+
+                }
+                else{
+                    finish();
+                }
                 return true;
             default:
 
@@ -222,46 +233,77 @@ public class List_tanaman extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+
+            if (resultCode == RESULT_OK) {
+                if (path != null) {
 
 
+                    if (cekcamera) {
+                        int position = list_data.size();
+                        Log.d("jml ", "" + position + " " + path);
+                        list_data.add(position, new List_data(path));
 
-            if (path != null) {
+                        adapter.notifyItemInserted(position);
+
+                        //posisi edit 23
+                        //lst.add(path);
 
 
-                if (cekcamera) {
-                    int position = list_data.size();
-                    Log.d("jml ", "" + position + " " + path);
-                    list_data.add(position, new List_data(path));
+                    } else {
 
-                    adapter.notifyItemInserted(position);
+                        list_data.add(new List_data(path));
+                        initializeAdapter();
+
+                        //posisi edit 23
+                        //lst.add(path);
+                    }
 
                     //posisi edit 23
-                    //lst.add(path);
+                    //b.putStringArrayList("listfoto", lst);
 
-
-                } else {
-
-                    list_data.add(new List_data(path));
-                    initializeAdapter();
-
-                    //posisi edit 23
-                    //lst.add(path);
                 }
-
-                //posisi edit 23
-                //b.putStringArrayList("listfoto", lst);
-
             } else {
 
-                Toast.makeText(this, "Foto Gagal di Ambil, Ambil ulang Lagi!",
+                Toast.makeText(this, "Foto Gagal di Ambil!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == RESULT_GALERY_IMAGE) {
+
+            if (resultCode == RESULT_OK) {
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+                Cursor cursor = getContentResolver().query(selectedImage,
+                        filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+               for(int i=0;i<filePathColumn.length;i++) {
+
+                   int columnIndex = cursor.getColumnIndex(filePathColumn[i]);
+                   String picturePath = cursor.getString(columnIndex);
+
+                   int position = list_data.size();
+                   Log.d("jml ", "" + position + " " + path);
+                   list_data.add(position, new List_data(picturePath));
+
+                   adapter.notifyItemInserted(position);
+
+                   cursor.close();
+               }
+            }
+            else{
+                Toast.makeText(this, "Foto Gagal di Ambil!",
                         Toast.LENGTH_SHORT).show();
             }
 
 
         } else {
-            Toast.makeText(this, "Foto Gagal di Ambil!",
+            Toast.makeText(this, "Foto Gagal di Ambil, Ambil ulang Lagi!",
                     Toast.LENGTH_SHORT).show();
+
         }
     }
 

@@ -16,14 +16,14 @@ public class Foto_data {
     String khasiat;
     String senyawa;
     String path;
-    int fototanaman;
+    int id_tanaman;
 
-    Foto_data(String nama_lokal, String nama_latin, String khasiat, String senyawa,int fototanaman,String path) {
+    Foto_data(String nama_lokal, String nama_latin, String khasiat, String senyawa,int id_tanaman,String path) {
         this.nama_lokal = nama_lokal;
         this.nama_latin = nama_latin;
         this.khasiat = khasiat;
         this.senyawa = senyawa;
-        this.fototanaman = fototanaman;
+        this.id_tanaman = id_tanaman;
         this.path=path;
     }
 

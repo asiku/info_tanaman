@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-
+import android.text.InputFilter;
 
 
 public class Fototanaman extends AppCompatActivity {
@@ -44,6 +45,7 @@ public class Fototanaman extends AppCompatActivity {
     private ImageView img_kamera;
 
 
+
     private Tb_tanaman_Crud crud_tanaman;
     private Tb_tanaman tb_tanaman=new Tb_tanaman();
 
@@ -53,7 +55,7 @@ public class Fototanaman extends AppCompatActivity {
     ArrayList<String> lst=new ArrayList<String>();
 
     Bundle c=new Bundle();
-
+    Bundle b=new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +63,16 @@ public class Fototanaman extends AppCompatActivity {
         setContentView(R.layout.activity_fototanaman);
 
         Intent intent=getIntent();
-        Bundle b=intent.getExtras();
+        b=intent.getExtras();
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         Button btn_save = (Button) findViewById(R.id.btn_save);
         txt_nama_lokal = (EditText) findViewById(R.id.txt_nama_lokal);
+
+        txt_nama_lokal.setFilters(new InputFilter[]{new InputFilter.AllCaps()});;
+
         txt_nama_latin = (EditText) findViewById(R.id.txt_nama_latin);
         txt_nama_khasiat = (EditText) findViewById(R.id.txt_nama_khasiat);
         txt_senyawa = (EditText) findViewById(R.id.txt_nama_senyawa);
@@ -106,9 +112,6 @@ public class Fototanaman extends AppCompatActivity {
         else {
             txt_foto.setText("0 Files");
         }
-
-
-
 
 
 
@@ -181,19 +184,48 @@ public class Fototanaman extends AppCompatActivity {
                 crud_tanaman=new Tb_tanaman_Crud(this);
                 crud_foto=new Tb_Foto_Crud(this);
 
-                tb_tanaman.nama_lokal = txt_nama_lokal.getText().toString();
-                tb_tanaman.nama_latin = txt_nama_latin.getText().toString();
-                tb_tanaman.khasiat = txt_nama_latin.getText().toString();
-                tb_tanaman.senyawa = txt_senyawa.getText().toString();
 
-                int idtanaman = crud_tanaman.Insert(tb_tanaman);
+                Tb_tanaman cari=new Tb_tanaman();
 
-              for(int i=0;i<lst.size();i++) {
-                  tb_foto.id_tanaman = idtanaman;
-                  tb_foto.nama_lokasi = lst.get(i);
-                  crud_foto.Insert(tb_foto);
-              }
-                Toast.makeText(getApplicationContext(), "Data Tersimpan", Toast.LENGTH_LONG).show();
+                cari=crud_tanaman.getTanamanByName(txt_nama_lokal.getText().toString());
+
+Log.d("Car tanaman",""+cari.nama_lokal);
+
+//                Toast.makeText(getApplicationContext(), "Nama Lokal : " + cari.nama_lokal.equalsIgnoreCase(txt_nama_lokal.getText().toString()) + " Sudah Ada!", Toast.LENGTH_LONG).show();
+
+                if (cari.nama_lokal!=null) {
+                    Toast.makeText(getApplicationContext(), "Nama Lokal : " + txt_nama_lokal.getText().toString() + " Sudah Ada!", Toast.LENGTH_LONG).show();
+                    txt_nama_lokal.requestFocus();
+                    txt_nama_lokal.setText("");
+                } else {
+
+
+
+                      tb_tanaman.nama_lokal = txt_nama_lokal.getText().toString();
+                      tb_tanaman.nama_latin = txt_nama_latin.getText().toString();
+                      tb_tanaman.khasiat = txt_nama_khasiat.getText().toString();
+                      tb_tanaman.senyawa = txt_senyawa.getText().toString();
+
+                      int idtanaman = crud_tanaman.Insert(tb_tanaman);
+
+                      for (int i = 0; i < lst.size(); i++) {
+                          tb_foto.id_tanaman = idtanaman;
+                          tb_foto.nama_lokasi = lst.get(i);
+                          crud_foto.Insert(tb_foto);
+                      }
+                      Toast.makeText(getApplicationContext(), "Data Tersimpan", Toast.LENGTH_LONG).show();
+
+
+
+//                    txt_nama_lokal.setText("");
+//                    txt_nama_latin.setText("");
+//                    txt_nama_khasiat.setText("");
+//                    txt_senyawa.setText("");
+
+                }
+
+
+
             }
             catch (Exception e){
                 Toast.makeText(getApplicationContext(), "Gagal simpan :"+e.getMessage(), Toast.LENGTH_LONG).show();
@@ -351,6 +383,27 @@ switch (view.getId()) {
         validkhasiat();
         break;
 }
+        }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+//                if(b!=null) {
+//                    Toast.makeText(getApplicationContext(), "Maaf tidak Bisa Exit karena ada Inputan yang Sudah di Proses!", Toast.LENGTH_LONG).show();
+//
+//                }
+//                else{
+                    finish();
+//                }
+                return true;
+            default:
+
+                return super.onOptionsItemSelected(item);
+
         }
     }
 

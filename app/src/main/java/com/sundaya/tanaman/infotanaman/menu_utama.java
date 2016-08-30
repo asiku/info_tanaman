@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 
@@ -26,13 +27,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import android.support.v7.widget.SearchView;
 
 public class menu_utama extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener  {
 
 
-    private boolean toggle;
+    private boolean toggle=true;
     private Menu menu;
     public final String APP_TAG = "FotoTanaman";
 
@@ -49,7 +50,7 @@ public class menu_utama extends AppCompatActivity
     Tb_Foto tb_foto=new Tb_Foto();
 
 
-    private void initializeData(){
+    private void initializeData(int flag,String txt){
 
         File mediaStorageDir = new File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
@@ -59,8 +60,14 @@ public class menu_utama extends AppCompatActivity
 
         crud_foto=new Tb_Foto_Crud(this);
 
+        ArrayList<HashMap<String, String>> getTanaman=new   ArrayList<HashMap<String, String>>();
 
-        ArrayList<HashMap<String, String>> getTanaman = crud_tanaman.getAllTanaman();
+        if(flag==0) {
+            getTanaman = crud_tanaman.getAllTanaman();
+        }
+        else{
+            getTanaman = crud_tanaman.filterTanamanByName(txt);
+        }
 
         tanaman = new ArrayList<>();
 
@@ -74,22 +81,11 @@ public class menu_utama extends AppCompatActivity
             Log.d("nama lokasi  ",""+getTanaman.get(i).get(tb_foto.KEY_LOKASI));
 
             tanaman.add(new Foto_data(getTanaman.get(i).get(tb_tanaman.KEY_NAMA_LOKAL),getTanaman.get(i).get(tb_tanaman.KEY_NAMA_LATIN),getTanaman.get(i).get(tb_tanaman.KEY_KHASIAT)
-                    ,getTanaman.get(i).get(tb_tanaman.KEY_SENYAWA),R.drawable.plant,tb_foto.nama_lokasi));
+                    ,getTanaman.get(i).get(tb_tanaman.KEY_SENYAWA),Integer.valueOf(getTanaman.get(i).get(tb_tanaman.KEY_ID_TANAMAN)),tb_foto.nama_lokasi));
         }
 
 
 
-//        persons.add(new Foto_data("Lavery Maiss", "25 years old",R.drawable.user));
-//        persons.add(new Foto_data("Lillie Watts", "35 years old",R.drawable.tanamanlogo));
-//        persons.add(new Foto_data("Emma Wilson", "23 years old",R.drawable.plant));
-//        persons.add(new Foto_data("Lavery Maiss", "25 years old",R.drawable.user));
-//        persons.add(new Foto_data("Lillie Watts", "35 years old",R.drawable.tanamanlogo));
-//        persons.add(new Foto_data("Emma Wilson", "23 years old",R.drawable.plant));
-//        persons.add(new Foto_data("Lavery Maiss", "25 years old",R.drawable.user));
-//        persons.add(new Foto_data("Lillie Watts", "35 years old",R.drawable.tanamanlogo));
-//        persons.add(new Foto_data("Emma Wilson", "23 years old",R.drawable.plant));
-//        persons.add(new Foto_data("Lavery Maiss", "25 years old",R.drawable.user));
-//        persons.add(new Foto_data("Lillie Watts", "35 years old",R.drawable.tanamanlogo));
     }
 
     private void initializeAdapter(){
@@ -138,7 +134,7 @@ public class menu_utama extends AppCompatActivity
         rv.setLayoutManager(mStaggeredLayoutManager);
         rv.setHasFixedSize(true);
 
-        initializeData();
+        initializeData(0,"");
         initializeAdapter();
 
 
@@ -159,6 +155,34 @@ public class menu_utama extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_foto, menu);
+
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+//        LinearLayoutManager llm = new LinearLayoutManager(this);
+//        rv.setLayoutManager(llm);
+
+                rv.setLayoutManager(mStaggeredLayoutManager);
+                rv.setHasFixedSize(true);
+
+                if(newText.isEmpty()){
+                    initializeData(0,newText.toUpperCase());
+                }else{
+                    initializeData(1,newText.toUpperCase());
+                }
+
+                initializeAdapter();
+                return true;
+            }
+        });
         this.menu = menu;
         return true;
     }
@@ -169,6 +193,21 @@ public class menu_utama extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.action_toggle) {
             toggle();
+            return true;
+        }
+        else if (id == R.id.action_refresh) {
+
+
+
+            mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+//        LinearLayoutManager llm = new LinearLayoutManager(this);
+//        rv.setLayoutManager(llm);
+
+            rv.setLayoutManager(mStaggeredLayoutManager);
+            rv.setHasFixedSize(true);
+
+            initializeData(0,"");
+            initializeAdapter();
             return true;
         }
         return super.onOptionsItemSelected(item);

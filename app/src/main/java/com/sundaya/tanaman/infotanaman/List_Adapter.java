@@ -54,7 +54,8 @@ public class List_Adapter extends RecyclerView.Adapter<List_Adapter.List_foto> {
     @Override
     public void onBindViewHolder(List_foto listViewholder, final int i) {
 
-        Picasso.with(mContext).load("file:///"+list_foto.get(i).path).into( listViewholder.img_list_foto);
+        Picasso.with(mContext).load("file:///"+list_foto.get(i).path).fit()
+                .centerCrop().into( listViewholder.img_list_foto);
 
         listViewholder.img_remove.setOnClickListener(new View.OnClickListener() {
             @Override

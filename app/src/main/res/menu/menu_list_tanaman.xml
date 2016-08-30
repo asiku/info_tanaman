@@ -2,17 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-    <item
-        android:id="@+id/action_camera_roll"
-        android:orderInCategory="100"
-        android:title="Show As Grid"
-        android:icon="@drawable/ic_action_ceklist"
-        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_select_all"
         android:orderInCategory="100"
         android:title="Show As Grid"
-        android:icon="@drawable/ic_menu_gallery"
+        android:icon="@drawable/ic_action_list_galery"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_camera_roll"
+        android:orderInCategory="100"
+        android:title="Finish"
+        android:icon="@drawable/ic_action_name"
+        app:showAsAction="ifRoom" />
+
+
 </menu>

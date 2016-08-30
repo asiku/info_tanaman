@@ -46,6 +46,83 @@ public class Tb_tanaman_Crud {
 
     }
 
+
+    public Tb_tanaman getTanamanByName(String nama){
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String selectQuery = "SELECT  " +
+                Tb_tanaman.KEY_ID_TANAMAN + "," +
+                Tb_tanaman.KEY_NAMA_LOKAL + "," +
+                Tb_tanaman.KEY_NAMA_LATIN + "," +
+                Tb_tanaman.KEY_KHASIAT + "," +
+                Tb_tanaman.KEY_SENYAWA +
+                " FROM " + Tb_tanaman.TABLE
+                + " WHERE " +
+                Tb_tanaman.KEY_NAMA_LOKAL + "=?";// It's a good practice to use parameter ?, instead of concatenate string
+
+        int iCount =0;
+        Tb_tanaman pos = new Tb_tanaman();
+
+        Cursor cursor = db.rawQuery(selectQuery, new String[] { nama } );
+
+        if (cursor.moveToFirst()) {
+            //   do {
+            pos.id_tanaman =cursor.getInt(cursor.getColumnIndex(Tb_tanaman.KEY_ID_TANAMAN));
+            pos.nama_lokal =cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_NAMA_LOKAL));
+            pos.nama_latin  =cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_NAMA_LATIN));
+            pos.khasiat  =cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_KHASIAT));
+            pos.senyawa  =cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_SENYAWA));
+
+            //  } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return pos;
+    }
+
+    public  ArrayList<HashMap<String, String>> filterTanamanByName(String name){
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        if (name.length() != 0) {
+
+            name = "%" + name + "%";
+        }
+
+        String selectQuery = "SELECT  " +
+                Tb_tanaman.KEY_ID_TANAMAN + "," +
+                Tb_tanaman.KEY_NAMA_LOKAL + "," +
+                Tb_tanaman.KEY_NAMA_LATIN + "," +
+                Tb_tanaman.KEY_KHASIAT + "," +
+                Tb_tanaman.KEY_SENYAWA +
+                " FROM " + Tb_tanaman.TABLE
+                + " WHERE " +
+                Tb_tanaman.KEY_NAMA_LOKAL + " LIKE '" + name +"'";// It's a good practice to use parameter ?, instead of concatenate string
+
+
+        ArrayList<HashMap<String, String>> posList = new ArrayList<HashMap<String, String>>();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+
+        if (cursor.moveToFirst()) {
+            do {
+                HashMap<String, String> pos = new HashMap<String, String>();
+                pos.put(Tb_tanaman.KEY_ID_TANAMAN, cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_ID_TANAMAN)));
+                pos.put(Tb_tanaman.KEY_NAMA_LOKAL, cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_NAMA_LOKAL)));
+                pos.put(Tb_tanaman.KEY_NAMA_LATIN, cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_NAMA_LATIN)));
+                pos.put(Tb_tanaman.KEY_KHASIAT, cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_KHASIAT)));
+                pos.put(Tb_tanaman.KEY_SENYAWA, cursor.getString(cursor.getColumnIndex(Tb_tanaman.KEY_SENYAWA)));
+                posList.add(pos);
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return posList;
+
+    }
+
     public ArrayList<HashMap<String, String>> getTanamanById(int Id){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selectQuery = "SELECT  " +

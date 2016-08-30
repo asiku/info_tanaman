@@ -1,5 +1,7 @@
 package com.sundaya.tanaman.infotanaman;
 
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,13 +12,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class Edit_list_Activity extends AppCompatActivity {
 
@@ -35,16 +44,75 @@ public class Edit_list_Activity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    public static ArrayList<String> lst=new ArrayList<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        Intent intent = getIntent();
+        Bundle c = intent.getExtras();
+
+        if(c!=null) {
+            lst = c.getStringArrayList("editlist");
+
+            TextView txt_e_nama_lokal=(TextView) findViewById(R.id.txt_e_nama_lokal);
+            TextView txt_e_nama_latin=(TextView) findViewById(R.id.txt_e_nama_latin);
+            TextView txt_e_khasiat=(TextView) findViewById(R.id.txt_e_khasiat);
+            TextView txt_e_senyawa=(TextView) findViewById(R.id.txt_e_senyawa);
+
+            TextView lbl_e_khasiat=(TextView) findViewById(R.id.lbl_e_khasiat);
+
+
+            txt_e_nama_lokal.setText(c.getString(Tb_tanaman.KEY_NAMA_LOKAL));
+            txt_e_nama_latin.setText(c.getString(Tb_tanaman.KEY_NAMA_LATIN));
+            txt_e_khasiat.setText(c.getString(Tb_tanaman.KEY_KHASIAT));
+
+            txt_e_senyawa.setText(c.getString(Tb_tanaman.KEY_SENYAWA));
+            TextView lbl_e_senyawa = (TextView) findViewById(R.id.lbl_e_senyawa);
+            Log.d("senywa",c.getString(Tb_tanaman.KEY_SENYAWA));
+            Typeface face6= Typeface.createFromAsset(getAssets(), "fonts/Roboto-Bold.ttf");
+            lbl_e_senyawa.setTypeface(face6);
+
+
+
+           if(!txt_e_senyawa.getText().toString().isEmpty()) {
+//               Toast.makeText(this,""+txt_e_senyawa.getText().toString(),Toast.LENGTH_SHORT).show();
+
+               lbl_e_senyawa.setVisibility(View.VISIBLE);
+           }
+            else {
+               lbl_e_senyawa.setVisibility(View.GONE);
+           }
+
+
+
+            Typeface face= Typeface.createFromAsset(getAssets(), "fonts/Slabo27px-Regular.ttf");
+            txt_e_nama_lokal.setTypeface(face);
+
+            Typeface face2= Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
+            txt_e_nama_latin.setTypeface(face2);
+
+            Typeface face3= Typeface.createFromAsset(getAssets(), "fonts/Roboto-Bold.ttf");
+            lbl_e_khasiat.setTypeface(face3);
+
+            Typeface face4= Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
+            txt_e_khasiat.setTypeface(face4);
+
+
+
+            Typeface face5= Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
+            txt_e_senyawa.setTypeface(face5);
+
+        }
+
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),lst.size());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -105,6 +173,7 @@ public class Edit_list_Activity extends AppCompatActivity {
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
+
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
@@ -114,8 +183,13 @@ public class Edit_list_Activity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_edit_list, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+//            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            ImageView img=(ImageView) rootView.findViewById(R.id.img_edit_list);
+
+            Picasso.with(getActivity().getApplicationContext()).load("file:///"+Edit_list_Activity.lst.get(getArguments().getInt(ARG_SECTION_NUMBER))).into( img);
+                //img.setImageResource(R.drawable.plant);
+            //Toast.makeText(getActivity().getApplicationContext(), "No"+getArguments().getInt(ARG_SECTION_NUMBER), Toast.LENGTH_SHORT).show();
+//            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
     }
@@ -126,34 +200,37 @@ public class Edit_list_Activity extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        private int cpage=0;
+
+        public SectionsPagerAdapter(FragmentManager fm,int cpage) {
             super(fm);
+            this.cpage=cpage;
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(position);
         }
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return cpage;
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
-        }
+//        @Override
+//        public CharSequence getPageTitle(int position) {
+//            switch (position) {
+//                case 0:
+//                    return "SECTION 1";
+//                case 1:
+//                    return "SECTION 2";
+//                case 2:
+//                    return "SECTION 3";
+//            }
+//            return null;
+//        }
     }
 }
