@@ -390,7 +390,14 @@ switch (view.getId()) {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
+
+            case R.id.action_bersihin_teks:
+                txt_nama_lokal.setText("");
+                   txt_nama_latin.setText("");
+                    txt_nama_khasiat.setText("");
+                    txt_senyawa.setText("");
+                txt_foto.setText("0 Files");
+                return true;
             case android.R.id.home:
 //                if(b!=null) {
 //                    Toast.makeText(getApplicationContext(), "Maaf tidak Bisa Exit karena ada Inputan yang Sudah di Proses!", Toast.LENGTH_LONG).show();

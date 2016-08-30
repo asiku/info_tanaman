@@ -7,16 +7,19 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always"/>
 
-    <item
-        android:id="@+id/action_toggle"
-        android:orderInCategory="100"
-        android:title="Show As Grid"
-        android:icon="@drawable/ic_action_grid"
-        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_refresh"
         android:orderInCategory="100"
         android:title="Refresh"
         android:icon="@android:drawable/stat_notify_sync_noanim"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_toggle"
+        android:orderInCategory="100"
+        android:title="Show As Grid"
+        android:icon="@drawable/ic_action_grid"
+        app:showAsAction="ifRoom" />
+
 </menu>
